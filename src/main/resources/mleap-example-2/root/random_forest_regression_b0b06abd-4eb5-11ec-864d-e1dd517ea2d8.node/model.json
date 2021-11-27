@@ -1,0 +1,22 @@
+{
+   "op": "random_forest_regression",
+   "attributes": {
+      "num_features": {
+         "long": 1
+      },
+      "tree_weights": {
+         "type": "list",
+         "double": [
+            1.0,
+            1.0
+         ]
+      },
+      "trees": {
+         "type": "list",
+         "string": [
+            "tree0",
+            "tree1"
+         ]
+      }
+   }
+}
