@@ -1,0 +1,25 @@
+{
+   "name": "random_forest_regression_ab48bdec-4d30-11ec-ac39-2b293870be8f",
+   "shape": {
+      "inputs": [
+         {
+            "name": "x",
+            "port": "features"
+         }
+      ],
+      "outputs": [
+         {
+            "name": "output",
+            "port": "prediction"
+         },
+         {
+            "name": "raw_prediction",
+            "port": "raw_prediction"
+         },
+         {
+            "name": "probability",
+            "port": "probability"
+         }
+      ]
+   }
+}
