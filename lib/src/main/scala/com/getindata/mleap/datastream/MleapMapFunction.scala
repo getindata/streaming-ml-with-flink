@@ -1,20 +1,20 @@
-package com.getindata
+package com.getindata.mleap.datastream
 
-import com.getindata.bundle.BundleLoader
+import com.getindata.mleap.BundleLoader
 import ml.combust.mleap.runtime.frame.{DefaultLeapFrame, Row, Transformer}
 import ml.combust.mleap.tensor.DenseTensor
+import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.configuration.Configuration
-import org.apache.flink.streaming.api.functions.KeyedProcessFunction
-import org.apache.flink.util.Collector
 import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success}
 
 case class BundleLoadProblem(th: Throwable) extends RuntimeException(th)
 
-case class MleapProcessFunction(bundleName: String, bundleLoader: BundleLoader) extends KeyedProcessFunction[String, Double, Double] {
+case class MleapMapFunction(bundleName: String, bundleLoader: BundleLoader) extends
+  RichMapFunction[Double, Double] {
 
-  private val LOG = LoggerFactory.getLogger(classOf[MleapProcessFunction])
+  private val LOG = LoggerFactory.getLogger(classOf[MleapMapFunction])
   @transient var transformer: Transformer = _
 
   override def open(parameters: Configuration): Unit = {
@@ -27,10 +27,10 @@ case class MleapProcessFunction(bundleName: String, bundleLoader: BundleLoader) 
     }
   }
 
-  override def processElement(value: Double, ctx: KeyedProcessFunction[String, Double, Double]#Context, out: Collector[Double]): Unit = {
+  override def map(value: Double): Double = {
     val dataset = Seq(Row(DenseTensor(Array(value), List(1))))
     val frame = DefaultLeapFrame(transformer.inputSchema, dataset)
     val res = transformer.transform(frame).get.dataset.head(1).asInstanceOf[Double]
-    out.collect(res)
+    res
   }
 }
